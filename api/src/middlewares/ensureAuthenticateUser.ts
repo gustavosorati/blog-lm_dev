@@ -8,7 +8,6 @@ interface IPayload {
 export async function ensureAuthenticateClient(request: Request, response: Response, next: NextFunction) {
   const authHeader = request.headers.authorization;
 
-  console.log(authHeader);
   if(!authHeader) return response.status(401).json({
     message: "Token missing"
   });
