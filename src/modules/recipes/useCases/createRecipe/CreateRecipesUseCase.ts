@@ -1,6 +1,7 @@
 import { prisma } from "../../../../database/prismaClient";
 
 interface Recipe {
+  id_user: string;
   title: string
   tags: string
   description: string
@@ -9,17 +10,18 @@ interface Recipe {
   ingredients: string
 }
 
-export class CreateRecipesUseCases {
-  async execute({title, tags, description, information, preparations, ingredients}: Recipe) {
+export class CreateRecipesUseCase {
+  async execute({ id_user, title, tags, description, information, preparations, ingredients}: Recipe) {
 
     const recipe = await prisma.recipes.create({
       data: {
+        userId: id_user,
         title,
         tags,
         description,
         information,
         preparations,
-        ingredients
+        ingredients,
       }
     });
 
