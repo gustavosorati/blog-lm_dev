@@ -1,18 +1,29 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 export const SearchBarContainer = styled.div`
-    border-radius: 30px;
-    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
 
-    display: flex;
-    align-items: center;
-    gap: .6rem;
-    padding: 0 1rem;
+  input {
+    width: 100%;
+    height: 51px;
+    padding: 1rem;
 
-    input {
-        border: 0;
-        background: transparent;
-        width: 120px;
-        height: 35px;
-    }
-`
+    border: none;
+    background-color: #f8f8f8;
+  }
+
+  button {
+    width: 60px;
+    padding: 0 10px;
+
+    border: none;
+    background-color: #6656bf;
+
+    font-size: .75rem;
+    font-weight: bold;
+    color: #fff;
+  }
+`;
+
+

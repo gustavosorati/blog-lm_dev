@@ -1,41 +1,29 @@
-import { Link } from "react-router-dom";
-import { SearchBar } from "./SearchBar";
+import { NavRight } from "./NavRight";
+import { Center, HeaderContainer, Right, User } from "./styles";
 
-import logoImg from '../../assets/logo.svg'
 
-import { HeaderContainer, MenuContainer } from "./styles";
-import { useEffect } from "react";
-import { Login } from "./Login";
 
 export function Header() {
+  return (
+    <HeaderContainer>
+      <strong>Foodfy</strong>
 
-    function setEffectHeader() {
+      <Center>
+        <a href="/">Sobre</a>
+        <a href="/">Receitas</a>
+        <a href="/">Chefs</a>
+      </Center>
 
-    }
+      <Right>
+        <User>
+          <a href="/">Register</a>
+          <span />
+          <a href="/">Login</a>
+        </User>
 
+        <NavRight />
+      </Right>
 
-    useEffect(() => {
-
-        window.removeEventListener('scrollY', setEffectHeader);
-    }, []);
-
-    window.addEventListener('scrollY', setEffectHeader);
-
-    return (
-        <HeaderContainer>
-            <div className="container">
-                <img src={logoImg} alt="" />
-
-                <MenuContainer>
-                    <Link to="/">Blog</Link>
-                    <Link to="/">Posts</Link>
-                    <Link to="/">Pages</Link>
-                </MenuContainer>
-
-                <SearchBar />
-
-                <Login />
-            </div>
-        </HeaderContainer>
-    )
+    </HeaderContainer>
+  )
 }

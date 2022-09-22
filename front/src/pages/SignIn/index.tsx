@@ -1,40 +1,36 @@
-import { useState } from "react";
-import { api } from "../../utils/axios";
+import { FormEvent, useContext, useState } from "react";
+import { ButtonComponent } from "../../components/Forms/Button";
+import { InputComponent } from "../../components/Forms/Inputs";
+import { UserContext } from "../../context/UserContext";
 import { SignInContainer } from "./styles";
 
 export function SignIn() {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const { login, user } = useContext(UserContext);
 
-    async function handleSignIn(e: any) {
+    async function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        // console.log(e.target.teste.value)
-        const response = await api.post('/user/login', {
-            username,
-            password
-        });
-
-        console.log(response)
+        await login(username, password);
     }
 
-    console.log(username)
     return (
         <SignInContainer>
-            <form onSubmit={handleSignIn}>
-                <input 
+            <form onSubmit={handleSubmit}>
+                <InputComponent 
                     name="username" 
-                    placeholder="Email" 
+                    placeholder="Usuário" 
                     onChange={(e) => setUsername(e.target.value)} 
                     value={username} 
                 />
-                <input 
+                <InputComponent 
                     name="password" 
                     placeholder="Password" 
                     onChange={(e) => setPassword(e.target.value)} 
-                    value={password}  
+                    value={password} 
                 />
 
-                <button type="submit">Log In</button>
+                <ButtonComponent />
             </form>
         </SignInContainer>
     )
