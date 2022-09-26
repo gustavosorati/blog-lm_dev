@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id         String   @unique @default(uuid())
+  username   String   @unique
+  password   String
+  name       String
+  avatar_url String
+  is_admin   Boolean? @default(false)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  recipes    Recipes[]
+
+  @@map("users")
+}
+
+model Recipes {
+  id          String @unique @default(uuid())
+  title       String
+  description String
+
+  information  String
+  preparations String
+  ingredients  String
+
+  user   Users  @relation(fields: [userId], references: [id])
+  userId String
+
+  created_at   DateTime       @default(now())
+  updated_at   DateTime?
+  recipe_files Recipe_Files[]
+
+  @@map("recipes")
+}
+
+model Files {
+  id           String         @unique @default(uuid())
+  name         String
+  path         String
+  recipe_files Recipe_Files[]
+
+  @@map("files")
+}
+
+model Recipe_Files {
+  id        String  @unique @default(uuid())
+  recipe    Recipes @relation(fields: [recipesId], references: [id])
+  recipesId String
+  file      Files   @relation(fields: [filesId], references: [id])
+  filesId   String
+
+  @@map("recipe_files")
+}
