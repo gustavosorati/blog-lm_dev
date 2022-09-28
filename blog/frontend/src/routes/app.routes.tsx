@@ -11,7 +11,7 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<DefaultLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/single" element={<Single />} />
+        <Route path="/post/:id" element={<Single />} />
         <Route path="/write" element={<Write />} />
       </Route>
 
