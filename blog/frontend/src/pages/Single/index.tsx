@@ -1,57 +1,92 @@
 import { PencilSimpleLine, Trash } from "phosphor-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {formatDistance} from 'date-fns';
 import { api } from "../../utils/api";
+import { Post } from "../Home";
 import { Menu } from "./Menu";
 import { Container, Content, DeleteButton, EditButton, ImagePost, ImageUser, Info, PostContainer, UserContainer } from "./styles";
+import { AuthContext } from "../../context/authContext";
+
+
+type ISinglePost = Post & {
+  username: string;
+  user_img: string;
+}
+
 
 export function Single() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const {currentUser} = useContext(AuthContext);
+  const [post, setPost] = useState<ISinglePost>({} as ISinglePost);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  async function handleLogin(event: FormEvent) {
-    event.preventDefault();
+  async function fetchPosts() {
+    try {
+      const response = await api.get(`/api/posts/${id}`);
 
-    const response = await api.post('/login', {
-      username,
-      password
-    });
-
+      setPost(response.data);
+    } catch(err) {
+      console.log(err)
+    }
   }
 
+  async function handleDelete() {
+    try {
+      await api.delete(`/api/posts/${id}`);
+
+      navigate("/");
+    } catch(err) {
+      console.log(err)
+    } 
+  }
+
+  const getText = (html: string) =>{
+    const doc = new DOMParser().parseFromString(html, "text/html")
+    return doc.body.textContent
+  }
+
+  useEffect(() => {
+    fetchPosts();
+  }, [id]);
+
+  
   return (
     <Container className="container">
       <Content>
-        <ImagePost src="https://via.placeholder.com/500" />
+        <ImagePost src={`../public/${post.img}`} />
 
         <UserContainer>
 
-            <ImageUser src="https://via.placeholder.com/50" />
+            <ImageUser src={post.user_img} />
             <Info>
-              <strong>Gustavo</strong>
-              <span>Posted 2 days ago</span>
+              <strong>{post.username}</strong>
+              <span>Posted {post?.date ? formatDistance(new Date(post?.date), new Date(), {
+                addSuffix: true
+              }) : ''}</span>
             </Info>
 
-            <EditButton to={`/write?edit=2`}>
-              <PencilSimpleLine size={24} color="white" />
-            </EditButton>
+            {currentUser && currentUser?.username === post.username && (
+              <>
+                <EditButton to={`/write?edit=${post.id}`} state={post}>
+                  <PencilSimpleLine size={24} color="white" />
+                </EditButton>
 
-            <DeleteButton to={`/write?delete=2`}>
-              <Trash size={24} color="white" />
-            </DeleteButton>
+                <DeleteButton onClick={handleDelete}>
+                  <Trash size={24} color="white" />
+                </DeleteButton>
+              </>
+            )}
         </UserContainer>
 
         <PostContainer>
-            <h1>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</h1>
+            <h1>{post.title}</h1>
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure autem cupiditate obcaecati molestiae, voluptatibus tempore laboriosam exercitationem recusandae quod maxime voluptates est qui esse deleniti repellendus magnam laudantium deserunt? Libero?
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure autem cupiditate obcaecati molestiae, voluptatibus tempore laboriosam exercitationem recusandae quod maxime voluptates est qui esse deleniti repellendus magnam laudantium deserunt? Libero?
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure autem cupiditate obcaecati molestiae, voluptatibus tempore laboriosam exercitationem recusandae quod maxime voluptates est qui esse deleniti repellendus magnam laudantium deserunt? Libero?
-
-            </p>
+            <p>{getText(post.desc)}</p>
         </PostContainer>
       </Content>
 
-      <Menu />
+      <Menu category={post.cat} />
     </Container>
   )
 }

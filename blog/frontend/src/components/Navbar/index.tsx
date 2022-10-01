@@ -1,8 +1,14 @@
-import { Container, Content, Links, Logo, Write } from "./styles";
-import logoImg from '../../assets/logo.png'
+import { Container, Links, Write } from "./styles";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/authContext";
 
 export function Navbar() {
+  const { currentUser, logout } = useContext(AuthContext);
+
+  async function handleLogout() {
+    await logout();
+  }
   return (
     <Container className="container">
         <h1>Aqui vai a logo</h1>
@@ -26,8 +32,8 @@ export function Navbar() {
             <h6>Food</h6>
           </Link>    
 
-          <span>Gustavo</span>
-          <span>Logout</span>
+          <span>{currentUser?.username}</span>
+          {currentUser ? <span onClick={handleLogout}>Logout</span> : <Link to="/login">Login</Link>}
           <Write>
             <Link to="/write">Write</Link>
           </Write>

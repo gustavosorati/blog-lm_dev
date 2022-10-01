@@ -1,31 +1,47 @@
-import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
 import { api } from "../../utils/api";
 import { Container, Form } from "./styles";
 
 export function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const {login} = useContext(AuthContext);
+  const [inputs, setInputs] = useState({
+    username: "",
+    password: "",
+  });
+  const [error, setError] = useState<any>(null);
 
-  async function handleLogin(event: FormEvent) {
+  const navigate = useNavigate();
+
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const response = await api.post('/login', {
-      username,
-      password
-    });
+    try {
+      await login(inputs);
+      
+      navigate('/');
+    } catch (error) {
+      let e = error as AxiosError;
+      setError(e.response?.data);
+    }
+  }
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setInputs(prev => ({...prev, [e.target.name]: e.target.value}))
   }
 
   return (
     <Container>
       <h1>Login</h1>
 
-      <Form onSubmit={handleLogin}>
-        <input type="text" placeholder="username" onChange={(e) => setUsername(e.target.value)} value={username} />
-        <input type="text" placeholder="password" onChange={(e) => setPassword(e.target.value)} value={password} />
+      <Form onSubmit={handleSubmit}>
+        <input type="text" placeholder="username" name="username" onChange={(e) => handleChange(e)} value={inputs.username} />
+        <input type="text" placeholder="password" name="password" onChange={(e) => handleChange(e)} value={inputs.password} />
         <button type="submit">Login</button>
-        
-        <p>This is a Error!</p>
+        {error && <p>{error}</p>}
+
         <span>Don't you have a account? <Link to="/register">Register</Link> </span>
       </Form>
 

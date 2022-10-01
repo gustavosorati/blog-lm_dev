@@ -20,6 +20,7 @@ export const Menu = styled.aside`
 export const ImagePost = styled.img`
   width: 100%;
   height: 300px;
+  object-fit: cover;
 `;
 
 export const UserContainer = styled.div`
@@ -56,7 +57,7 @@ export const EditButton = styled(Link)`
   justify-content: center;
 `
 
-export const DeleteButton = styled(Link)`
+export const DeleteButton = styled.button`
   background-color: lightcoral;
   border-radius: 50%;
   width: 40px;

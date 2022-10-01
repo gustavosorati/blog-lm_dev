@@ -1,30 +1,34 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Post as IPost } from "..";
 import { Container, Content, Description, Image, ImageContainer, Title } from "./styles";
-
-type IPost = {
-  id: number;
-  title: string;
-  desc: string;
-  img: string;
-}
 
 type Props = {
   post: IPost;
 }
 
 export function Post({post}: Props) {
+  const navigation = useNavigate();
+
+  function handleRedirectToPost() {
+    navigation(`/post/${post.id}`)
+  }
+
+  const getText = (html: string) =>{
+    const doc = new DOMParser().parseFromString(html, "text/html")
+    return doc.body.textContent
+  }
 
   return (
     <Container>
       <ImageContainer>
-        <Image src={post.img} alt="" />
+        <Image src={`../public/${post.img}`} alt="" />
       </ImageContainer>
       <Content>
         <Link to={`/post/${post.id}`}>
           <Title>{post.title}</Title>
         </Link>
-        <Description>{post.desc}</Description>
-        <button>Read Mode</button>
+        <Description>{getText(post.desc)}</Description>
+        <button onClick={handleRedirectToPost}>Read Mode</button>
       </Content>
     </Container>
   )

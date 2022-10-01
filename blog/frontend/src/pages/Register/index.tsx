@@ -1,34 +1,48 @@
-import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { AxiosError } from "axios";
+import { ChangeEvent, FormEvent, InputHTMLAttributes, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../utils/api";
 import { Container, Form } from "./styles";
 
 export function Register() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [inputs, setInputs] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState<any>(null);
 
-  async function handleLogin(event: FormEvent) {
+  const navigate = useNavigate();
+
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const response = await api.post('/login', {
-      username,
-      password
-    });
+    try {
+      await api.post('/auth/register', inputs);
+      
+      navigate('/login')
+    } catch (error) {
+      let e = error as AxiosError;
+      setError(e.response?.data);
+    }
+  }
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setInputs(prev => ({...prev, [e.target.name]: e.target.value}))
   }
 
   return (
     <Container>
-      <h1>Login</h1>
+      <h1>Register</h1>
 
-      <Form onSubmit={handleLogin}>
-        <input type="text" required placeholder="username" onChange={(e) => setUsername(e.target.value)} value={username} />
-        <input type="text" required placeholder="email" onChange={(e) => setEmail(e.target.value)} value={email} />
-        <input type="password" required placeholder="password" onChange={(e) => setPassword(e.target.value)} value={password} />
+      <Form onSubmit={handleSubmit}>
+        <input type="text" required placeholder="username" name="username" onChange={handleChange} value={inputs.username} />
+        <input type="text" required placeholder="email" name="email" onChange={handleChange} value={inputs.email} />
+        <input type="password" required placeholder="password" name="password" onChange={handleChange} value={inputs.password} />
         
         <button type="submit">Register</button>
+        {error && <p>{error}</p>}
         
-        <p>This is a Error!</p>
         <span>Do you have a account? <Link to="/login">Login</Link> </span>
       </Form>
 
