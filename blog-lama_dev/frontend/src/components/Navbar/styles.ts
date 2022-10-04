@@ -12,10 +12,6 @@ export const Content = styled.div`
   width: 120px;
 `
 
-
-export const Logo = styled.img``
-
-
 export const Links = styled.div`
   display: flex;
   align-items: center;
@@ -29,6 +25,7 @@ export const Links = styled.div`
 
   span {
     cursor: pointer;
+    font-weight: 600;
   }
 `
 
@@ -42,7 +39,7 @@ export const Write = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 300;
+  font-weight: 300 !important;
   
   &:hover {
     color: teal;

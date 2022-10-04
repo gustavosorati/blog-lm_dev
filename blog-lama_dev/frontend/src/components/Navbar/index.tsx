@@ -11,7 +11,10 @@ export function Navbar() {
   }
   return (
     <Container className="container">
-        <h1>Aqui vai a logo</h1>
+        <Link to="/">
+          <h1>Simple Blog</h1>
+        </Link>
+
         <Links>
           <Link to="/?cat=art">
             <h6>Art</h6>

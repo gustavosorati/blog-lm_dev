@@ -10,6 +10,8 @@ export const Container = styled.div`
 `
 
 export const ImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
   flex: 2;
   position: relative;
 
@@ -39,6 +41,7 @@ export const Content = styled.div`
   justify-content: space-between;
 
   button {
+    margin-top: 20px;
     width: max-content;
     padding: 10px 20px;
     color: teal;
@@ -59,5 +62,10 @@ export const Title = styled.h1`
 `
 
 export const Description = styled.p`
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: justify;
+  line-height: 30px;
+
   font-size: 1.125rem;
 `
